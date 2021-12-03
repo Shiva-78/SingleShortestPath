@@ -7,63 +7,39 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-/**
- * Cost and successor matrices for the Floyd-Warshall Algorithm.
- *
- */
-@SuppressWarnings({"squid:S106", "PMD.SystemPrintln"}) // Using System.out only for debug output
-public class FloydWarshallMatrices {
+public class Matrices {
 
   private final int n;
   private final String[] nodes;
-  private final Map<String, Integer> nodeNameToIndex;
+  private final Map<String, Integer> mappingNodeIndex;
 
   final int[][] costs;
   final int[][] successors;
 
-  /**
-   * Creates the matrices for the given array of nodes names.
-   *
-   * @param nodes the node names
-   */
-  public FloydWarshallMatrices(String[] nodes) {
+  
+  public Matrices(String[] nodes) {
     this.n = nodes.length;
     this.nodes = nodes;
 
-    // Create lookup map from node name to node index
     Map<String, Integer> temp = new HashMap<>();
     for (int i = 0; i < n; i++) {
       temp.put(nodes[i], i);
     }
-    this.nodeNameToIndex = Collections.unmodifiableMap(temp);
+    this.mappingNodeIndex = Collections.unmodifiableMap(temp);
 
-    // Create cost and successor matrix
     this.costs = new int[n][n];
     this.successors = new int[n][n];
   }
 
-  /**
-   * Returns the cost from source to destination nodes, referenced by their names.
-   *
-   * @param source the source node name
-   * @param dest the destination node name
-   * @return the cost from source to destination node
-   */
-  public int getCost(String source, String dest) {
-    return costs[nodeNameToIndex.get(source)][nodeNameToIndex.get(dest)];
+ 
+  public int getCost(String source, String target) {
+    return costs[mappingNodeIndex.get(source)][mappingNodeIndex.get(target)];
   }
 
-  /**
-   * Returns the shortest path from source to destination nodes, referenced by their names.
-   *
-   * @param source the source node name
-   * @param dest the destination node name
-   * @return the shortest path from source to destination node, if it exists; an empty optional
-   *     otherwise
-   */
-  public Optional<List<String>> getPath(String source, String dest) {
-    int i = nodeNameToIndex.get(source);
-    int j = nodeNameToIndex.get(dest);
+
+  public Optional<List<String>> getPath(String source, String target) {
+    int i = mappingNodeIndex.get(source);
+    int j = mappingNodeIndex.get(target);
 
     // Check for -1 in case there's no path from source to dest
     if (successors[i][j] == -1) {

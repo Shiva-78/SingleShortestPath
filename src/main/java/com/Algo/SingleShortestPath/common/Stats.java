@@ -3,17 +3,9 @@ package com.Algo.SingleShortestPath.common;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * Statistics utilities.
- */
-public class Statistics {
+public class Stats {
 
-  /**
-   * Calculates the median of the given list of values.
-   *
-   * @param values the values
-   * @return the median of the given values
-   */
+
   public static long median(List<Long> values) {
     int numValues = values.size();
     long[] array = new long[numValues];
@@ -23,12 +15,7 @@ public class Statistics {
     return median(array);
   }
 
-  /**
-   * Calculates the median of the given values.
-   *
-   * @param values the values
-   * @return the median of the given values
-   */
+  
   public static long median(long[] values) {
     Arrays.sort(values);
     int length = values.length;

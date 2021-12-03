@@ -1,17 +1,13 @@
 package com.Algo.SingleShortestPath.dijkstra;
 
-/**
- * Data structure containing a node, it's total distance from the start and its predecessor.
- *
- */
 class NodeWrapper<N> implements Comparable<NodeWrapper<N>> {
   private final N node;
-  private int totalDistance;
+  private int distance;
   private NodeWrapper<N> predecessor;
 
-  NodeWrapper(N node, int totalDistance, NodeWrapper<N> predecessor) {
+  NodeWrapper(N node, int distance, NodeWrapper<N> predecessor) {
     this.node = node;
-    this.totalDistance = totalDistance;
+    this.distance = distance;
     this.predecessor = predecessor;
   }
 
@@ -19,12 +15,12 @@ class NodeWrapper<N> implements Comparable<NodeWrapper<N>> {
     return node;
   }
 
-  void setTotalDistance(int totalDistance) {
-    this.totalDistance = totalDistance;
+  void setTotalDistance(int distance) {
+    this.distance = distance;
   }
 
   public int getTotalDistance() {
-    return totalDistance;
+    return distance;
   }
 
   public void setPredecessor(NodeWrapper<N> predecessor) {
@@ -37,11 +33,8 @@ class NodeWrapper<N> implements Comparable<NodeWrapper<N>> {
 
   @Override
   public int compareTo(NodeWrapper<N> other) {
-    return Integer.compare(this.totalDistance, other.totalDistance);
+    return Integer.compare(this.distance, other.distance);
   }
-
-  // Using identity for equals and hashcode here, which is much faster.
-  // It's sufficient as within the algorithm, we have only one NodeWrapper instance per node.
 
   @Override
   public boolean equals(Object other) {

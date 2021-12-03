@@ -1,9 +1,9 @@
-package com.Algo.SingleShortestPath.bellman_ford;
+package com.Algo.SingleShortestPath.floyd_warshall;
 
 import com.google.common.graph.MutableValueGraph;
 import com.google.common.graph.ValueGraph;
 import com.google.common.graph.ValueGraphBuilder;
-import com.Algo.SingleShortestPath.common.Statistics;
+import com.Algo.SingleShortestPath.common.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,13 +12,13 @@ import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
 @SuppressWarnings({"squid:S106", "PMD.SystemPrintln"}) // System.out is OK in this test program
-public class TestBellmanFordRuntime {
+public class TestRuntime {
 
   private static final int MAX_WARMUPS = 1;
-  private static final int MAX_ITERATIONS = 50;
+  private static final int MAX_ITERATIONS = 5;
 
   private static final int MIN_NODES = 88;
-  private static final int MAX_NODES = 160_000;
+  private static final int MAX_NODES = 3375;
 
   // Let's assume that on a road map, an average of four roads depart from each intersection
   private static final int EDGES_PER_NODE = 4;
@@ -53,7 +53,7 @@ public class TestBellmanFordRuntime {
       if (!warmup) {
         List<Long> times = TIMES.computeIfAbsent(numNodes, k -> new ArrayList<>());
         times.add(time);
-        long median = Statistics.median(times);
+        long median = Stats.median(times);
         System.out.printf(
             Locale.US,
             "  -->  Median after %2d iterations = %,8.1f ms",
@@ -66,24 +66,34 @@ public class TestBellmanFordRuntime {
   }
 
   private static long runTestForGraphSize(int numNodes, int numEdges) {
-    List<String> shortestPath = null;
+    Matrices shortestPaths = null;
     long time = 0;
-    while (shortestPath == null) {
+    while (shortestPaths == null) {
       ValueGraph<String, Integer> graph = buildGraph(numNodes, numEdges);
-      String source = nodeName(0);
-      String target = nodeName(numNodes - 1);
 
       time = System.nanoTime();
       try {
-        shortestPath = BellmanFord.findShortestPath(graph, source, target);
+        shortestPaths = Floyd_Warshall.findPaths(graph, false);
       } catch (IllegalArgumentException ex) {
         System.out.println("*** Negative cycle detected - repeating test ***");
         // Repeat whole test in case of a negative cycle in the graph
       }
       time = System.nanoTime() - time;
     }
-    blackhole += shortestPath.size();
+    blackhole += sumOfAllValues(shortestPaths);
     return time;
+  }
+
+  private static int sumOfAllValues(Matrices shortestPaths) {
+    int sum = 0;
+    int n = shortestPaths.costs.length;
+    for (int i = 0; i < n; i++) {
+      for (int j = 0; j < n; j++) {
+        sum += shortestPaths.costs[i][j];
+        sum += shortestPaths.successors[i][j];
+      }
+    }
+    return sum;
   }
 
   private static ValueGraph<String, Integer> buildGraph(int numNodes, int numEdges) {

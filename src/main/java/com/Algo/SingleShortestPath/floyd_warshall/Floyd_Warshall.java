@@ -3,32 +3,15 @@ package com.Algo.SingleShortestPath.floyd_warshall;
 import com.google.common.graph.ValueGraph;
 import java.util.Optional;
 
-/**
- * Implementation of the Floyd-Warshall Algorithm.
- *
- */
-@SuppressWarnings({"squid:S106", "PMD.SystemPrintln"}) // Using System.out only for debug output
-public class FloydWarshall {
+public class Floyd_Warshall {
 
-  /**
-   * Finds the shortest paths between all node pairs in the given graph.
-   *
-   * @param graph the graph
-   * @param printDebugOutput if <code>true</code>, the cost and successor matrices are printed to
-   *     std out after each iteration
-   * @return a matrix containing the shortest distances between all node pairs
-   * @throws IllegalArgumentException if a negative cycle was discovered
-   */
-  public static FloydWarshallMatrices findShortestPaths(
+  public static Matrices findPaths(
       ValueGraph<String, Integer> graph, boolean printDebugOutput) {
-    // Preparation: Put all nodes into an array, so we have them indexed
     int n = graph.nodes().size();
     String[] nodes = graph.nodes().toArray(new String[n]);
 
-    // Preparation: Create matrices
-    FloydWarshallMatrices m = new FloydWarshallMatrices(nodes);
+    Matrices m = new Matrices(nodes);
 
-    // Preparation: Fill in direct paths
     for (int i = 0; i < n; i++) {
       for (int j = 0; j < n; j++) {
         Optional<Integer> edgeValue = graph.edgeValue(nodes[i], nodes[j]);
@@ -42,7 +25,6 @@ public class FloydWarshall {
       m.print();
     }
 
-    // Iterations
     for (int k = 0; k < n; k++) {
       for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
@@ -60,7 +42,6 @@ public class FloydWarshall {
       }
     }
 
-    // Detect negative cycles
     for (int i = 0; i < n; i++) {
       if (m.costs[i][i] < 0) {
         throw new IllegalArgumentException("Graph has a negative cycle");

@@ -1,18 +1,13 @@
 package com.Algo.SingleShortestPath.bellman_ford;
 
-/**
- * Data structure containing a node, it's total cost from the start and its predecessor.
- *
- * <p>Used by {@link BellmanFord}.
- */
 class NodeWrapper<N> {
   private final N node;
-  private int totalCostFromStart;
+  private int Cost;
   private NodeWrapper<N> predecessor;
 
-  NodeWrapper(N node, int totalCostFromStart, NodeWrapper<N> predecessor) {
+  NodeWrapper(N node, int Cost, NodeWrapper<N> predecessor) {
     this.node = node;
-    this.totalCostFromStart = totalCostFromStart;
+    this.Cost = Cost;
     this.predecessor = predecessor;
   }
 
@@ -20,12 +15,12 @@ class NodeWrapper<N> {
     return node;
   }
 
-  void setTotalCostFromStart(int totalCostFromStart) {
-    this.totalCostFromStart = totalCostFromStart;
+  void setTotalCostFromStart(int Cost) {
+    this.Cost = Cost;
   }
 
   public int getTotalCostFromStart() {
-    return totalCostFromStart;
+    return Cost;
   }
 
   public void setPredecessor(NodeWrapper<N> predecessor) {
@@ -36,8 +31,6 @@ class NodeWrapper<N> {
     return predecessor;
   }
 
-  // Using identity for equals and hashcode here, which is much faster.
-  // It's sufficient as within the algorithm, we have only one NodeWrapper instance per node.
 
   @Override
   public boolean equals(Object other) {
